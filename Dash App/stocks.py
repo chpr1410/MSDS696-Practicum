@@ -17,8 +17,6 @@ import statistics
 
 model_result_df = pd.read_csv('https://raw.githubusercontent.com/chpr1410/MSDS696-Practicum/main/Logs/Result%20Logs/By%20Window/Result%20Log%20by%20Window%20-%2030%20min.csv')
 
-print(model_result_df.head())
-
 # DataTable
 dff = model_result_df.drop(['TP','FP','TN','FN'], axis=1)
 
@@ -89,33 +87,34 @@ app.layout = html.Div([
 
                 dcc.Markdown('''
 
-                    ## Dashboard Description
-
-                    The dashboards below are a way to visualize the results of this project.
-
-                    The dashboard is broken down into three different sections:
-
-                    **1.) Comparing Metrics of Different Stocks By Window**
-
-                    This section plots the metrics for models of individual stocks, and allows for a comparison between them.
-                    Metrics include ROC Score, Model % Returns, and Passive % Returns.
-                    Performance can be analyzed by stock ticker, day of the week, and hour of the day.
-
-                    **2.) Comparing Metrics for Different Groups of Stocks By Window**
-
-                    This section allows for an analysis of a group of stocks and how they performed together.
-                    The metrics are the same as above, except they are averaged for the selection of stocks
-                    instead of showing each one individually.
-
-                    **3.) Selecting a Portfolio of Stocks and Viewing Financial Performance**
-
-                    This section allows one to determine which models and stocks performed best for specific windows.
-                    By filtering the datatable, one can select which stocks - and for which windows - they would like
-                    to add to their portfolio.  The graphs plot the performance of the portfolio and the bottom output
-                    shows the average weekly percentage return as well as this weekly rate on an annual basis.
-
-                    Can you choose a portfolio that provides positive performance?
-
+                    ## Project Overview
+                    
+                    For this project, I use Deep Learning to analyze pricing patterns for the stocks of 54 Exchange Traded Funds (ETFs).  
+                    I split the trading day into 30 minute periods and trained Machine Learning models to predict whether or not the stock   
+                    price would increase during each trading period.  The stock market is open for 6.5 hours - or 13 periods - each day.  For  
+                    each period, the model analyzes previous pricing data and makes a prediction of whether the stock price will be higher or  
+                    lower at the end of the next 30 minutes.
+                    
+                    I obtained 2 years worth of pricing data for each stock.  I trained the models on 70% of the data, and validated them on  
+                    20% of the data.  The results visualized below come from the models' predictions on the test dataset, which makes up the  
+                    remaining 10% of the data.  
+                    
+                    I use a couple methods to evaluate a model's performance in making predictions on the test dataset.  First, I use ROC  
+                    Score as a measure of accuracy.  Second, I analyze how well the models make investment decisons.  For this structure, the  
+                    model is hypothetically investing in the stock when it predicts that the stock will go up, and not doing anything when it  
+                    predicts the stock will go down.  I refer to this strategy as 'Model Returns' below.  I compare the model returns with a  
+                    passive strategy, where every window is invested in indiscriminately.  I label this strategy 'Passive Returns' below.  
+                    
+                    I separated the models' results on the test dataset into windows for each of the 35 hours in the trading week (7 hours  
+                    rounded up per day, 5 days per week).  I calculated the ROC Score for each window, and averaged the Model and Passive returns  
+                    for all datapoints in the window.  For example, assume the test dataset contains 10 weeks worth of pricing data.  One of the  
+                    35 windows would represent the hour from 9 AM to 10 AM on Mondays.  This window would have 10 datapoints, one for each of  
+                    the 10 weeks.  Each window's ROC Score and % Returns displayed below are calculated on, or are an average of, several weeks of   
+                    data.  
+                    
+                    These dashboards are a way to visualize the results of this project.  Interacting with them allows for a comparison of   
+                    different stock's performance in different time windows.  One can select a portfolio of stocks to see how my machine learning     
+                    models would have performed while investing in them.  
 
                 '''),
 
@@ -127,7 +126,14 @@ app.layout = html.Div([
                                             # First Section Title
                 ###########################################################################
                 html.H2('Comparing Metrics of Different Stocks By Window'),
+                
+                dcc.Markdown('''            
 
+                    This section plots the metrics for models of individual stocks, and allows for a comparison between them.
+                    Metrics include ROC Score, Model % Returns, and Passive % Returns.
+                    Performance can be analyzed by stock ticker, day of the week, and hour of the day.
+                    
+                    '''),
 
                 ###########################################################################
                                             # First Dropdown Sections
@@ -217,7 +223,13 @@ app.layout = html.Div([
                 ###########################################################################
                 html.H2('Comparing Metrics for Different Groups of Stocks By Window'),
 
+                dcc.Markdown('''
 
+                    This section allows for an analysis of a group of stocks and how they performed together.
+                    The metrics are the same as above, except they are averaged for the selection of stocks
+                    instead of showing each one individually.
+                    
+                '''),
                 ###########################################################################
                                             # Second Dropdown Sections
                 ###########################################################################
@@ -307,6 +319,17 @@ app.layout = html.Div([
                                             # Third Section Title
                 ###########################################################################
                 html.H2('Selecting a Portfolio of Stocks and Viewing Financial Performance'),
+    
+                dcc.Markdown(''' 
+                    
+                    This section allows one to determine which models and stocks performed best for specific windows.
+                    By filtering the datatable, one can select which stocks - and for which windows - they would like
+                    to add to their portfolio.  The graphs plot the performance of the portfolio and the bottom output
+                    shows the average weekly percentage return as well as this weekly rate on an annual basis.
+
+                    Can you choose a portfolio that provides positive performance?
+                    
+                '''),
 
                 ###########################################################################
                                             # Data Table
@@ -444,6 +467,7 @@ app.layout = html.Div([
                 State('my_day_window', 'value'),
                 State('my_hour_window', 'value')],       
 )
+
 def update_graph(n_clicks, stock_ticker, day, hour):
 
     if stock_ticker == ['All']:
@@ -473,7 +497,7 @@ def update_graph(n_clicks, stock_ticker, day, hour):
     x_label = []
     for d in day_str:
         for h in hour:
-            x_label.append(d + " " + str(h))
+            x_label.append(d + " " + str(h)+":00")
 
 
     ###################################################################################################################
@@ -522,7 +546,7 @@ def update_graph(n_clicks, stock_ticker, day, hour):
     stock_df['Window'] = x_label
 
     fig2 = px.scatter(stock_df, x='Window', y=stock_df.columns[0:],
-                    labels=dict(value="Strat. Return (Already in %)", variable="Ticker"),title="Strategy Return For Different Windows")
+                    labels=dict(value="Model Return (Already in %)", variable="Ticker"),title="Model Return For Different Windows")
 
     fig2.update_xaxes(ticks="outside", tickwidth=2, tickcolor='crimson', ticklen=10)
     #fig2.update_xaxes(showgrid=True, gridwidth=0.1, gridcolor='crimson')
@@ -566,14 +590,15 @@ def update_graph(n_clicks, stock_ticker, day, hour):
 )
 
 
-def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
 
+def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     '''
     ########################################################################
                             Second Section of Graphs
     ########################################################################
 
     '''
+
     if stock_ticker2 == ['All']:
         stock_ticker2 = ticker_list
 
@@ -601,8 +626,7 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     x_label = []
     for d in day_str:
         for h in hour2:
-            x_label.append(d + " " + str(h))
-
+            x_label.append(d + " " + str(h)+":00")
     ###################################################################################################################
     # Get y_data (Trim DF)
     df_first_slice = model_result_df.loc[(model_result_df['Ticker'].isin(stock_ticker2))]
@@ -649,7 +673,7 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     stock_df['Returns'] = window_avgs_list
 
     fig5 = px.bar(stock_df, x='Window', y='Returns',
-                    labels=dict(value='Avg. Strategy Return', variable="Ticker",Returns='Avg. Strategy Return (Already in %)'),title="Portfolio Avg. Strategy Returns For Different Windows")
+                    labels=dict(value='Avg. Model Return %', variable="Ticker",Returns='Avg. Model Return (Already in %)'),title="Portfolio Avg. Model Returns For Different Windows")
 
     fig5.update_xaxes(ticks="outside", tickwidth=2, tickcolor='crimson', ticklen=10)
     fig5.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='LightPink')
@@ -735,7 +759,7 @@ def update_graph3(n_clicks3, chosen_rows):
     x_label = []
     for d in day_str:
         for h in hour3:
-            x_label.append(d + " " + str(h))
+            x_label.append(d + " " + str(h)+":00")
 
     ###################################################################################################################
     # Get y_data (Trim DF)
@@ -787,7 +811,7 @@ def update_graph3(n_clicks3, chosen_rows):
     stock_df['Returns'] = window_avgs_strat
 
     fig8 = px.bar(stock_df, x='Window', y='Returns',
-                    labels=dict(value='Avg. Strategy Return', variable="Ticker",Returns='Avg. Strategy Return (Already in %)'),title="Portfolio Avg. Strategy Returns For Different Windows")
+                    labels=dict(value='Avg. Model Return', variable="Ticker",Returns='Avg. Model Return (Already in %)'),title="Portfolio Avg. Model Returns For Different Windows")
 
     fig8.update_xaxes(ticks="outside", tickwidth=2, tickcolor='crimson', ticklen=10)
     fig8.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='LightPink')
