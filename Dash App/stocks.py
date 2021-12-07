@@ -103,7 +103,8 @@ app.layout = html.Div([
                     Score as a measure of accuracy.  Second, I analyze how well the models make investment decisons.  For this structure, the  
                     model is hypothetically investing in the stock when it predicts that the stock will go up, and not doing anything when it  
                     predicts the stock will go down.  I refer to this strategy as 'Model Returns' below.  I compare the model returns with a  
-                    passive strategy, where every window is invested in indiscriminately.  I label this strategy 'Passive Returns' below.  
+                    passive strategy, where every instance of a given window is invested in indiscriminately.  I label this strategy 'Passive  
+                    Returns' below.  
                     
                     I separated the models' results on the test dataset into windows for each of the 35 hours in the trading week (7 hours  
                     rounded up per day, 5 days per week).  I calculated the ROC Score for each window, and averaged the Model and Passive returns  
