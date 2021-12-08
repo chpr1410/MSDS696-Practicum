@@ -97,25 +97,24 @@ app.layout = html.Div([
                     
                     I obtained 2 years worth of pricing data for each stock.  I trained the models on 70% of the data, and validated them on  
                     20% of the data.  The results visualized below come from the models' predictions on the test dataset, which makes up the  
-                    remaining 10% of the data.  
+                    remaining 10% of the data.
                     
-                    I use a couple methods to evaluate a model's performance in making predictions on the test dataset.  First, I use ROC  
-                    Score as a measure of accuracy.  Second, I analyze how well the models make investment decisons.  For this structure, the  
-                    model is hypothetically investing in the stock when it predicts that the stock will go up, and not doing anything when it  
-                    predicts the stock will go down.  I refer to this strategy as 'Model Returns' below.  I compare the model returns with a  
-                    passive strategy, where every instance of a given window is invested in indiscriminately.  I label this strategy 'Passive  
-                    Returns' below.  
+                    I grouped the 30-minute periods into hour windows.  For example, the market opens at 9:30 AM, so the period from 9:30 to  
+                    10:00 AM would fall into the 9:00 hour window.  The periods from 10:00 AM to 10:30 AM and 10:30 AM to 11:00 AM fall into  
+                    the 10:00 window.  Each window occurs on each trading day of the week, Monday through Friday, making for 35 windows per  
+                    week. I separated the models' results on the test dataset into each window and then calculated ROC Score, Model Returns,  
+                    and Passive Returns for each window.
                     
-                    I separated the models' results on the test dataset into windows for each of the 35 hours in the trading week (7 hours  
-                    rounded up per day, 5 days per week).  I calculated the ROC Score for each window, and averaged the Model and Passive returns  
-                    for all datapoints in the window.  For example, assume the test dataset contains 10 weeks worth of pricing data.  One of the  
-                    35 windows would represent the hour from 9 AM to 10 AM on Mondays.  This window would have 10 datapoints, one for each of  
-                    the 10 weeks.  Each window's ROC Score and % Returns displayed below are calculated on, or are an average of, several weeks of   
-                    data.  
+                    ROC Score is a measure of how accurate the model makes predictions.  'Model Returns' and 'Passive Returns' allow me to  
+                    evaluate how each model performs in terms of investment returns.  For context, there are about 10 weeks worth of data in  
+                    the test dataset, which means that there are 10 instances of each window.  The model for each ETF 'decides' which of these  
+                    10 instances to actually invest in, and which to sit out.  Model Returns' is the average % return of the investment decisions    
+                    that the model makes for each window.  'Passive Returns', on the other hand, is the average of investing in all 10 instances  
+                    indiscriminately.  Comparing the two averages shows a model's postive or negative influence on investing returns.
                     
-                    These dashboards are a way to visualize the results of this project.  Interacting with them allows for a comparison of   
-                    different stock's performance in different time windows.  One can select a portfolio of stocks to see how my machine learning     
-                    models would have performed while investing in them.  
+                    Overall, these dashboards are a way to visualize the results of this project.  Interacting with them allows for a comparison of   
+                    different stock's performance in different time windows.  Near the bottom, one can select a portfolio of stocks to see how my  
+                    machine learning models would have performed while investing in them.  
 
                 '''),
 
@@ -130,8 +129,8 @@ app.layout = html.Div([
                 
                 dcc.Markdown('''            
 
-                    This section plots the metrics for models of individual stocks, and allows for a comparison between them.
-                    Metrics include ROC Score, Model % Returns, and Passive % Returns.
+                    This section plots the metrics for models of individual stocks, and allows for a  
+                    comparison between them.  Metrics include ROC Score, Model % Returns, and Passive % Returns.  
                     Performance can be analyzed by stock ticker, day of the week, and hour of the day.
                     
                     '''),
@@ -226,9 +225,9 @@ app.layout = html.Div([
 
                 dcc.Markdown('''
 
-                    This section allows for an analysis of a group of stocks and how they performed together.
-                    The metrics are the same as above, except they are averaged for the selection of stocks
-                    instead of showing each one individually.
+                    This section allows for an analysis of a group of stocks and how they performed together.  
+                    The metrics are the same as above, except they are averaged for the selection of stocks  
+                    instead of showing each one individually.  
                     
                 '''),
                 ###########################################################################
@@ -323,10 +322,10 @@ app.layout = html.Div([
     
                 dcc.Markdown(''' 
                     
-                    This section allows one to determine which models and stocks performed best for specific windows.
-                    By filtering the datatable, one can select which stocks - and for which windows - they would like
-                    to add to their portfolio.  The graphs plot the performance of the portfolio and the bottom output
-                    shows the average weekly percentage return as well as this weekly rate on an annual basis.
+                    This section allows one to determine which models and stocks performed best for specific windows.  
+                    By filtering the datatable, one can select which stocks - and for which windows - they would like  
+                    to add to their portfolio.  The graphs plot the performance of the portfolio and the bottom output  
+                    shows the average weekly percentage return as well as this weekly rate on an annual basis.  
 
                     Can you choose a portfolio that provides positive performance?
                     
