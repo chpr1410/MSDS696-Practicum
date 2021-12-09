@@ -44,7 +44,7 @@ Below are the graphs of clsing prices for the proxies over the last two years:
 
 ![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/proxy_pricing.jpg)
 
-These ETFs are not perfect representations of the economic indicators, but their pricing data was accessible in a consistent manner to the rest of the selection. 
+While not perfect representations of economic indicators, these proxies track similar enough indicators and their pricing data was accessible in a consistent manner to the rest of the selection. 
 
 I added features for the proxies' pricing data as well as their technical indicators.  I used the same technical indicators as above. 
 
