@@ -10,7 +10,6 @@
 - [Code Pt. 3: EDA and Visualization](https://github.com/chpr1410/MSDS696-Practicum/blob/main/3.%20Exploratory%20Data%20Analysis%20and%20Visualizing%20Some%20Results.ipynb)
 
 ## Project Overview
----
 
 In this project, I use deep learning methods to find stock price patterns in the stocks of Exchange Traded Funds (ETFs).  I focus particularly on finding intra-day patterns, dividing each trading week into 30-minute windows.
 
@@ -23,11 +22,11 @@ Each trading day begins at 9:30 AM and ends at 4:00 PM.  Within this day, there 
 *As a disclaimer, this project is for academic purposes only and should not be taken as financial advice.*
 
 ## Data Acquisition and Processing
----
+
 Stock price data was acquired from [Alpha Vantage](https://www.alphavantage.co/) via API calls.  The data for each minute for each stock included open, close, high, and low prices, as well as trading volume.  In total 493 trading days, or 192,270 minutes were included the dataset for each ETF.  Pricing data was transformed to make it stationary. Also, features were scaled for consistency.
 
 ## Feature Engineering
----
+
 Each dataset contained 57 features.  The raw pricing data for the stock was included as well as the following technical indicators, which are common in quantitative trading:
 
 - [Bollinger Bands](https://www.investopedia.com/terms/b/bollingerbands.asp)
@@ -52,14 +51,13 @@ I added features for the proxies' pricing data as well as their technical indica
 Finally, I added features to the dataset for time.  These included features for  hour, minute, and day of the week.  
 
 ## Recurrent Neural Network (RNN)
----
 
 The deep learning models were constructed using Keras/Tensorflow and the architecture consisted of two stacked LSTM layers.  Both dropout and recurrent dropout parameters were included.  
 
 70% of the data was used in training, 20% in validation, and 10% was withheld for testing. Early stopping and patience parameters were determined the number of training epochs. 
 
 ## Result Evaluation and Visualization 
----
+
 Model results on the test set were evaluated and logged after training.  I evaluated the models overall (on all window), and also more granularly on a window-by-window basis.
 
 Overall, 18 of the 54 models achieved ROC scores greater than 50%.
@@ -95,7 +93,6 @@ There are more negative returns in the passive strategy and lower positive retur
 ![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/80_percent_portfolio_summary.jpg)
 
 ## Conclusion
----
 
 Overall, my deep learning models achieved satisfactory accuracy scores on one third of the ETF datasets.  Furthermore, when evaluated on individual trading windows throughout the week, the models were indeed able to find some patterns in the datasets with higher accuracy.  Following the models’ predictions – on the 10-week testing sample at least – would have provided positive returns well above a passive strategy.  
 
