@@ -34,11 +34,11 @@ Each dataset contained 57 features.  The raw pricing data for the stock was incl
 - [Moving Average Convergence Divergence (MACD)](https://www.investopedia.com/terms/m/macd.asp) 
 
 Additional features were added to represent economic indicators.  Stock market performance depends in large part to different factors of economic performance – such as economic growth, inflation, unemployment, business confidence, and housing.  From the 54 selected ETFs, I chose ones to serve as proxies for these economic indicators.   
-- SPY (Economic Growth)
-- TLT (Inflation)
-- VXX (Unemployment)
-- XLV (Business Confidence) 
-- VNQ (Housing)
+- Economic Growth: SPY - SPDR S&P 500 ETF
+- Inflation: TLT - iShares 20+ Year Treasury Bond ETF
+- Unemployment: VXX - iPath Series B S&P 500 VIX Short-Term Futures ETN
+- Business Confidence: XLY - Consumer Discretionary Select Sector SPDR Fund
+- Housing: VNQ - Vanguard Real Estate Index Fund
 
 Below are the graphs of clsing prices for the proxies over the last two years: 
 
