@@ -40,7 +40,7 @@ Additional features were added to represent economic indicators.  Stock market p
 - XLV (Business Confidence) 
 - VNQ (Housing)
 
-Below are the pricing patterns for the proxies: 
+Below are the graphs of clsing prices for the proxies over the last two years: 
 
 ![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/proxy_pricing.jpg)
 
