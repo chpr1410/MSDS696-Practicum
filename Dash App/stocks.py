@@ -311,6 +311,29 @@ app.layout = html.Div([
                                          #)
                                    }
                 ),
+    
+                ###########################################################################
+                                            # Indicator
+                ###########################################################################
+
+
+                dcc.Markdown(''' --- '''),
+                dcc.Markdown(''' --- '''),
+
+                ###########################################################################
+                                            # Third Section Title
+                ###########################################################################
+                html.H2('Portfolio Performance (Same Windows for Each Stock)'),
+
+                dcc.Graph(id='my_graph11',
+                            figure={'data':[
+                                {'x':[1,2], 'y':[3,1]}
+
+                            ], #'layout':go.Layout(title='Relative Stock Returns Comparison',
+                               #                             yaxis = {'title':'Returns', 'tickformat':".2%"}
+                                         #)
+                                   }
+                ),
 
                 dcc.Markdown(''' --- '''),
                 dcc.Markdown(''' --- '''),
@@ -397,6 +420,7 @@ app.layout = html.Div([
                                 style = {'fontSize': 14, 'marginLeft': '50px'}
                                )
                 ], style={'display': 'inline-block'}),
+    
 
                  ###########################################################################
                                             # Third Graphs
@@ -443,7 +467,7 @@ app.layout = html.Div([
                 ###########################################################################
                                             # Third Section Title
                 ###########################################################################
-                html.H2('Portfolio Performance'),
+                html.H2('Portfolio Performance (Specific Window Selection)'),
 
                 dcc.Graph(id='my_graph10',
                             figure={'data':[
@@ -583,6 +607,7 @@ def update_graph(n_clicks, stock_ticker, day, hour):
 @app.callback(Output('my_graph4', 'figure'),
             Output('my_graph5', 'figure'),
             Output('my_graph6', 'figure'),
+            Output('my_graph11', 'figure'),
             [Input('submit-button2', 'n_clicks')],
             [State('my_ticker_symbol2', 'value'),
                     State('my_day_window2', 'value'),
@@ -654,9 +679,10 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     fig4.update_traces(marker_color='darkblue')
 
     ###################################################################################################################
+    # Model Section
     # Get y_data (Trim DF)
     df_first_slice = model_result_df.loc[(model_result_df['Ticker'].isin(stock_ticker2))]
-    window_avgs_list = []
+    window_strat_avg_list = []
     for d in day2:
         for h in hour2:
             # Group DF by ticker, day, and hour
@@ -666,11 +692,11 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
             avg_for_window = statistics.mean(df_slice['Strat Return'])
 
             # append to stock_dict[ticker]
-            window_avgs_list.append(round(avg_for_window*100,5))
+            window_strat_avg_list.append(round(avg_for_window*100,5))
 
     stock_df = pd.DataFrame()
     stock_df['Window'] = x_label
-    stock_df['Returns'] = window_avgs_list
+    stock_df['Returns'] = window_strat_avg_list
 
     fig5 = px.bar(stock_df, x='Window', y='Returns',
                     labels=dict(value='Avg. Model Return %', variable="Ticker",Returns='Avg. Model Return (Already in %)'),title="Portfolio Avg. Model Returns For Different Windows")
@@ -680,9 +706,10 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     fig5.update_traces(marker_color='darkblue')
 
     ###################################################################################################################
+    # Passive Section
     # Get y_data (Trim DF)
     df_first_slice = model_result_df.loc[(model_result_df['Ticker'].isin(stock_ticker2))]
-    window_avgs_list = []
+    window_passive_avg_list = []
     for d in day2:
         for h in hour2:
             # Group DF by ticker, day, and hour
@@ -692,11 +719,11 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
             avg_for_window = statistics.mean(df_slice['Passive Return'])
 
             # append to stock_dict[ticker]
-            window_avgs_list.append(round(avg_for_window*100,5))
+            window_passive_avg_list.append(round(avg_for_window*100,5))
 
     stock_df = pd.DataFrame()
     stock_df['Window'] = x_label
-    stock_df['Returns'] = window_avgs_list
+    stock_df['Returns'] = window_passive_avg_list
 
     fig6 = px.bar(stock_df, x='Window', y='Returns',
                     labels=dict(value='Avg. Passive Return', variable="Ticker",Returns='Avg. Passive Return (Already in %)'),title="Portfolio Avg. Passive Returns For Different Windows")
@@ -704,8 +731,59 @@ def update_graph2(n_clicks2, stock_ticker2, day2, hour2):
     fig6.update_xaxes(ticks="outside", tickwidth=2, tickcolor='crimson', ticklen=10)
     fig6.update_yaxes(zeroline=True, zerolinewidth=2, zerolinecolor='LightPink')
     fig6.update_traces(marker_color='darkblue')
+    
+    #############################################################################################
 
-    return fig4, fig5, fig6
+    beg_cap = 100
+    end_cap = beg_cap
+    for rate in window_strat_avg_list:
+        profit = end_cap * (rate/100)
+        end_cap = end_cap + profit
+
+    weekly_rate = (end_cap - beg_cap)/ beg_cap
+
+    annual_rate = (((1+weekly_rate)**52)-1)
+
+    beg_cap = 100
+    end_cap = beg_cap
+    for rate in window_passive_avg_list:
+        profit = end_cap * (rate/100)
+        end_cap = end_cap + profit
+
+    weekly_rate_pass = (end_cap - beg_cap)/ beg_cap
+
+    annual_rate_pass = (((1+weekly_rate_pass)**52)-1)
+
+    fig11 = go.Figure()
+
+    fig11.add_trace(go.Indicator(
+        mode = "number",
+        title = {"text": "Model Returns<br><span style='font-size:0.8em;color:gray'>Weekly (Top) Annualized (Bottom)</span>"},
+        number = {'suffix': "%"},
+        value = round(weekly_rate*100,2),
+        domain = {'x': [0, 0.5], 'y': [0.5, 1]}))
+
+    fig11.add_trace(go.Indicator(
+        mode = "number",
+        number = {'suffix': "%"},
+        value = round(annual_rate*100,2),
+        domain = {'x': [0, 0.5], 'y': [0, 0.5]}))
+
+    fig11.add_trace(go.Indicator(
+        mode = "number",
+        title = {"text": "Passive Returns<br><span style='font-size:0.8em;color:gray'>Weekly (Top) Annualized (Bottom)</span>"},
+        number = {'suffix': "%"},
+        value = round(weekly_rate_pass*100,2),
+        domain = {'x': [0.5, 1], 'y': [0.5, 1]}))
+
+    fig11.add_trace(go.Indicator(
+        mode = "number",
+        number = {'suffix': "%"},
+        value = round(annual_rate_pass*100,2),
+        domain = {'x': [0.5, 1], 'y': [0, 0.5]}))
+
+
+    return fig4, fig5, fig6, fig11
 
 
 @app.callback(Output('my_graph7', 'figure'),
