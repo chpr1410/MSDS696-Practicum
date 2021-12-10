@@ -4,7 +4,7 @@
 - [Project Paper](https://github.com/chpr1410/MSDS696-Practicum/blob/main/Project%20Paper.pdf)
 - [Project Slide Deck](https://github.com/chpr1410/MSDS696-Practicum/blob/main/Project%20Deck.pptx)
 - [Interactive Dash App](http://chpr1410.pythonanywhere.com/)
-- [Video Presentation](https://www.youtube.com/watch?v=vN2vqtyfdkA)
+- [Video Presentation](https://www.youtube.com/watch?v=WFbcVmjmMbs)
 - [Code Pt. 1: Working With the Data](https://github.com/chpr1410/MSDS696-Practicum/blob/main/1.%20Data%20Download%2C%20Cleaning%2C%20Feature%20Engineering%2C%20Processing.ipynb)
 - [Code Pt. 2: Building the Models](https://github.com/chpr1410/MSDS696-Practicum/blob/main/2.%20Data%20Generator%20and%20Model%20Training.ipynb)
 - [Code Pt. 3: EDA and Visualization](https://github.com/chpr1410/MSDS696-Practicum/blob/main/3.%20Exploratory%20Data%20Analysis%20and%20Visualizing%20Some%20Results.ipynb)
