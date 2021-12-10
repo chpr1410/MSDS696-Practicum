@@ -64,6 +64,12 @@ Overall, 18 of the 54 models achieved ROC scores greater than 50%.
 
 ![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/roc_scores_by_ticker.jpg)
 
+Investing in these ETFs for all periods according to model predictions would provide a slightly positive return, and one that improves on a passive strategy.
+
+![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/good_roc_stocks_dropdown.jpg)
+
+![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/good_roc_stocks_returns.jpg)
+
 However, it is more insightful to view the models performances on a window-by-window basis.  Here are the models percentage returns by window, averaged:
 
 ![Test Image 4](https://github.com/chpr1410/MSDS696-Practicum/blob/main/App/Static/Images/all_stocks_return_by_window.jpg)
